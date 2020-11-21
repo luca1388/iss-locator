@@ -3,7 +3,9 @@
 ![Screenshot](public/screen.png)
 
 ### Built 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) and built with Typescript.
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) and built with:
+* Typescript
+* [React Query](https://react-query.tanstack.com/)
 
 ## Available Scripts
 
