@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useCallback } from 'react';
 
 import { Map as OLMap, View, Feature } from "ol";
+import {Fill, Stroke, Circle, Style} from 'ol/style';
 import { fromLonLat } from 'ol/proj';
 import Point from 'ol/geom/Point';
 import TileLayer from "ol/layer/Tile";
@@ -47,15 +48,40 @@ const WorldMap: React.FC<WorldMapProps> = ({ zoom, center }): React.ReactElement
     }, [initMap]);
 
     useEffect(() => {
+        const issPoint = new Feature({
+            geometry: new Point(fromLonLat([center.lng, center.lat]))
+        });
+
+        issPoint.setStyle(
+            new Style({
+                image: new Circle({
+                  fill: new Fill({
+                    color: 'rgba(255,0,0,0.4)'
+                }),
+                stroke: new Stroke({
+                    color: '#ff0000',
+                    width: 1.25
+                }),
+                radius: 10
+                }),
+                fill: new Fill({
+                    color: 'rgba(255,0,0,0.4)'
+                }),
+                stroke: new Stroke({
+                    color: '#ff0000',
+                    width: 1.25
+                })
+            })
+        );
+
         const layer = new VectorLayer({
             source: new VectorSource({
                 features: [
-                    new Feature({
-                        geometry: new Point(fromLonLat([center.lng, center.lat]))
-                    })
+                    issPoint
                 ]
             })
         });
+        
         objectRef.current.removeLayer(layerRef.current);
         layerRef.current = layer;
         objectRef.current.addLayer(layer); 
