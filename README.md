@@ -1,10 +1,14 @@
 # ISS Locator
 
+## About this project
+With this tool you can display on a Map the real time position of the International Space Station (ISS) that is orbiting over the Earth.
+
 ![Screenshot](public/screen.png)
 
 ### Built 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) and built with:
 * Typescript
+* [OpenLayers](https://openlayers.org/) maps
 * [React Query](https://react-query.tanstack.com/)
 
 ## Available Scripts
