@@ -4,6 +4,7 @@ import WorldMap from "./components/Map/WorldMap";
 import { useQuery, QueryCache, ReactQueryCacheProvider } from "react-query";
 
 import fetch from "./utils/fetch";
+import Loader from "./components/UI/Loader/Loader";
 
 function App() {
   const queryCache = new QueryCache();
@@ -14,7 +15,19 @@ function App() {
   );
 
   if (isLoading) {
-    return <div>loading ...</div>;
+    return (
+      <div
+        style={{
+          width: "100%",
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Loader size={80} width={12} />
+      </div>
+    );
   }
 
   return (
