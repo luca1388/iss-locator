@@ -15,41 +15,44 @@ interface WorldMapProps {
     center: {
         lat: number,
         lng: number
+    },
+    marker?: {
+        lat: number,
+        lng: number
     }
 };
 
-const WorldMap: React.FC<WorldMapProps> = ({ zoom, center }): React.ReactElement => {
+const WorldMap: React.FC<WorldMapProps> = ({ zoom, center, marker = { lat: 0, lng: 0} }): React.ReactElement => {
     const mapRef = useRef<HTMLDivElement>(null);
-    const objectRef = useRef<any>(null);
-    const layerRef = useRef<any>(null);
+    // Initializing refs with an empty instance because if the initial value is null,
+    // but the type parameter doesn't, useRef will return an immutable RefObject so
+    // it should not be possible to assign a value to ref.current.
+    const objectRef = useRef<OLMap>(new OLMap({}));
+    const layerRef = useRef<VectorLayer>(new VectorLayer());
 
-    const initMap = useCallback(() => {
-        if (objectRef.current) {
-            return;
-        }
+    const onInitMap = useCallback(() => {
         objectRef.current = new OLMap({
             target:mapRef.current?.id,
             layers: [
-              new TileLayer({
-                source: new OSM({
-                    attributions: [ 'Tiles courtesy of <a href="https://geo6.be/">GEO-6</a>' ], 
+                new TileLayer({
+                    source: new OSM({
+                        attributions: [ 'Tiles courtesy of <a href="https://geo6.be/">GEO-6</a>' ], 
+                    }),
                 }),
-              }),
-            ],
-            view: new View({
-              center: fromLonLat([center.lng, center.lat]),
-              zoom: zoom,
-            }),
-          });
+            ]
+        });        
+    }, []);
+
+    const onUpdateMapOptions = useCallback(() => {
+        objectRef.current.setView(new View({
+            center: fromLonLat([center.lng, center.lat]),
+            zoom: zoom,
+        }));
     }, [center, zoom]);
 
-    useEffect(() => {
-        initMap();
-    }, [initMap]);
-
-    useEffect(() => {
+    const onUpdateMarkerPosition = useCallback(() => {
         const issPoint = new Feature({
-            geometry: new Point(fromLonLat([center.lng, center.lat]))
+            geometry: new Point(fromLonLat([marker.lng, marker.lat]))
         });
 
         issPoint.setStyle(
@@ -85,7 +88,19 @@ const WorldMap: React.FC<WorldMapProps> = ({ zoom, center }): React.ReactElement
         objectRef.current.removeLayer(layerRef.current);
         layerRef.current = layer;
         objectRef.current.addLayer(layer); 
-    }, [center]);
+    }, [marker]);
+
+    useEffect(() => {
+        onInitMap();
+    }, [onInitMap]);
+
+    useEffect(() => {
+        onUpdateMapOptions();
+    }, [onUpdateMapOptions]);
+
+    useEffect(() => {
+        onUpdateMarkerPosition();
+    }, [onUpdateMarkerPosition]);
 
     return (<div id="map-container" style={{height: '100vh', width: '100%'}} ref={mapRef}></div>);
 };
