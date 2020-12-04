@@ -5,7 +5,7 @@ With this tool you can display on a Map the real time position of the Internatio
 
 ![Screenshot](public/screen.png)
 
-### Built 
+### Built with 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) and built with:
 * Typescript
 * [OpenLayers](https://openlayers.org/) maps
